@@ -24,6 +24,9 @@ The primary estimate and sensitivity runs are summarized in
 [`RESULTS.md`](RESULTS.md). Run-level manifests are retained under
 [`results/runs/`](results/runs/) for reproducibility.
 
+The action-level diagnostic is in [`ERROR_ANALYSIS.md`](ERROR_ANALYSIS.md),
+with a generated figure and reproducible analysis script.
+
 ## Setup
 
 ```sh
