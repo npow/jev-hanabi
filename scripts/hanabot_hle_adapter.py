@@ -159,6 +159,25 @@ class EnsemblePlayer:
         return actions[0]
 
 
+class SafeConventionPlayer:
+    """Veto a play that is neither a direct certainty nor a convention call."""
+    def __init__(self, base_cls=DistantSavePlayer):
+        self.base = base_cls()
+
+    def act(self, obs):
+        action = self.base.act(obs)
+        if action.type is not ActionType.PLAY:
+            return action
+        view = obs.own_hand[action.card_index]
+        called = self.base._derive_called(obs, obs.player_index)
+        if obs.known_playable(action.card_index) or view.order in called:
+            return action
+        if obs.clue_tokens < obs.max_clue_tokens:
+            return self.base._choose_discard(obs)
+        return self.base._stall_clue(obs)
+
+
+
 def to_hle_move(action: Action, actor: int):
     if action.type is ActionType.PLAY:
         return f"(Play {action.card_index})"
@@ -182,6 +201,7 @@ async def run(seed: int, strategy_cls=DistantSavePlayer, pair=None):
     shadow = Shadow(state["hanabi_state"])
     strategies = [strategy_cls(), strategy_cls()] if pair is None else [pair[0](), pair[1]()]
     messages = state["prompt"]
+    jev_key = os.environ.get("JEV_API_KEY")
     while True:
         game = state["hanabi_state"]
         if game.is_terminal() or state.get("done") or state.get("turn_count", 0) >= 100:
@@ -191,8 +211,27 @@ async def run(seed: int, strategy_cls=DistantSavePlayer, pair=None):
         action = strategies[actor].act(obs)
         move = to_hle_move(action, actor)
         legal = [str(m) for m in game.legal_moves()]
+        if (os.environ.get("HANABOT_JEV_STALLS", "0") == "1"
+                and jev_key and obs.clue_tokens == obs.max_clue_tokens
+                and action.is_clue):
+            clue_indices = [i for i, candidate in enumerate(legal)
+                            if candidate.startswith("(Reveal")]
+            if len(clue_indices) > 1:
+                signals = hle.guaranteed_plays_after_clues(game, 2, legal)
+                values = hle.clue_information_values(game, 2, legal)
+                selected, _audit = hle.request_jev(
+                    state["full_prompt_before_move"], legal, jev_key,
+                    clue_indices, signals, None, values)
+                move = legal[selected]
         if move not in legal:
             raise RuntimeError(f"hanabot proposed illegal HLE move {move}; legal={legal}")
+        if os.environ.get("HANABOT_TRACE", "0") == "1":
+            actual = [f"RYGWB[{c.color()}]{c.rank()+1}" for c in game.player_hands()[actor]]
+            views = [(v.order, sorted(x.value for x in v.possible_colors), sorted(v.possible_ranks), v.clued) for v in obs.own_hand]
+            raw = hle.extract_knowledge(game, actor, 2)
+            partner_actual = [[c.color(), c.rank() + 1] for c in game.player_hands()[(actor + 1) % 2]]
+            partner_views = [(v.card, obs.is_playable(v.card) if v.card is not None else None) for v in obs.hands[(actor + 1) % 2]]
+            print(f"seed={seed} turn={state.get('turn_count', 0)} actor={actor} move={move} score={game.score()} stacks={game.fireworks()} lives={game.life_tokens()} actual={actual} partner={partner_actual} partner_views={partner_views} raw={raw} views={views}", file=sys.stderr)
         before_hands = [list(hand) for hand in game.player_hands()]
         before_fireworks = list(game.fireworks())
         before_score = game.score()
@@ -214,14 +253,14 @@ async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--games", type=int, default=100)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--strategy", choices=["chopsave", "critsave", "distsave", "focus", "goodtouch", "tempo", "deduce5", "playclue", "ensemble", "asym_df", "asym_fd"], default="distsave")
+    parser.add_argument("--strategy", choices=["chopsave", "critsave", "distsave", "focus", "goodtouch", "tempo", "deduce5", "playclue", "ensemble", "safe_distsave", "asym_df", "asym_fd"], default="distsave")
     args = parser.parse_args()
     strategy_cls = {"chopsave": ChopSavePlayer, "critsave": CriticalSavePlayer,
                     "distsave": DistantSavePlayer, "focus": FocusPlayer,
                     "goodtouch": GoodTouchPlayer, "tempo": TempoPlayer,
                     "deduce5": DeduceFivePlayer, "playclue": PlayCluePlayer,
                     "ensemble": EnsemblePlayer, "asym_df": DistantSavePlayer,
-                    "asym_fd": FocusPlayer}[args.strategy]
+                    "asym_fd": FocusPlayer, "safe_distsave": SafeConventionPlayer}[args.strategy]
     pair = None
     if args.strategy == "asym_df":
         pair = (DistantSavePlayer, FocusPlayer)
