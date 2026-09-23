@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SEEDS=$(paper_env/.venv/bin/python - <<'PY'
+print(','.join(str(i) for i in range(10, 110)))
+PY
+)
+
+HANABI_RESUME="${HANABI_RESUME:-0}" \
 HANABI_MODE=sherlock \
 HANABI_PROMPT_VARIANT=paper_sherlock_signal_score \
 HANABI_FILTER_RISKY_DISCARDS=1 \
@@ -11,7 +17,6 @@ HANABI_FILTER_REDUNDANT_CLUES=1 \
 HANABI_SCORE_RISK_PENALTY=0 \
 HANABI_FORCE_SIGNAL_CLUES=0 \
 HANABI_MIN_SIGNAL_SLOTS=1 \
-HANABI_FORCE_POSTERIOR_PLAYS=0 \
-HANABI_SEEDS='0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49' \
-HANABI_OUTDIR=results/runs/results_hle_paper_sherlock_signal_score_discard_threshold_10_matched_50 \
+HANABI_SEEDS="$SEEDS" \
+HANABI_OUTDIR=results/runs/results_hle_paper_sherlock_signal_score_primary_10_100 \
 paper_env/.venv/bin/python benchmark_hle.py

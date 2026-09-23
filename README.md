@@ -7,26 +7,22 @@ each legal action, then the highest expected score is applied.
 
 ## Current result
 
-The corrected policy uses:
+The primary evaluation setup uses:
 
 - Sherlock, 2-player self-play
 - paper-style signal prompt
 - guaranteed-safe play gate
 - 10% posterior discard safety filter
 - redundant-clue filter
-- corrected one-action clue criterion (`one_action_cap_v2`)
+- one-action clue opportunity accounting
 
 It scored **14.37/25 over 200 games** (seeds 10–209), with all games retaining
-all three lives. The published Sherlock references in the harness are GPT-4.1
-mini 6.5, GPT-4.1 14.8, DeepSeek-R1 17.5, o4-mini 14.6, and o3 17.6. These
-comparisons are contextual: the paper runs use free-form completions while
-this benchmark uses JEV's structured Score API.
+all three lives. See [`METHODS.md`](METHODS.md) for the setup and
+[`RESULTS.md`](RESULTS.md) for the complete comparison table.
 
-The latest risk-penalty candidate (0.1) scored **14.64/25 on 50 games** versus
-**14.52/25** for its matched zero-penalty control; the difference was not
-statistically established. See
-[`REPLICATION_SUMMARY.md`](REPLICATION_SUMMARY.md) and
-[`CORRECTED_200_ANALYSIS.md`](CORRECTED_200_ANALYSIS.md) for the full audit.
+The primary estimate and sensitivity runs are summarized in
+[`RESULTS.md`](RESULTS.md). Run-level manifests are retained under
+[`results/runs/`](results/runs/) for reproducibility.
 
 ## Setup
 
@@ -44,12 +40,12 @@ The scripts invoke `paper_env/.venv/bin/python`. If `uv` is unavailable,
 install the dependencies described in [`paper_env/pyproject.toml`](paper_env/pyproject.toml)
 inside another Python 3.11+ environment.
 
-## Reproduce the corrected baseline
+## Reproduce the baseline
 
-The 100-game block is defined by [`run_corrected_baseline.sh`](run_corrected_baseline.sh):
+The 100-game block is defined by [`run_primary_baseline.sh`](run_primary_baseline.sh):
 
 ```sh
-./run_corrected_baseline.sh
+./run_primary_baseline.sh
 ```
 
 Set `HANABI_RESUME=1` only when resuming the exact output directory after a
@@ -62,11 +58,10 @@ source, harness, and result hashes.
 - `benchmark_hle.py`: main paper-environment harness and policy gates.
 - `paper_env/`: pinned public Hanabi environment source and lockfile.
 - `run_*.sh`: declared experiments.
-- `results_hle_*/summary.json`, `manifest.json`, and `README.md`: compact result
-  artifacts. Raw JSONL transcripts are intentionally ignored because they are
-  large and contain full prompts.
-- `CRITERION_FIX.md`: correction to the clue opportunity criterion.
-- `REPLICATION_SUMMARY.md`: experiment table and statistical comparisons.
+- `results/runs/`: compact result artifacts and manifests. Raw JSONL transcripts
+  are intentionally ignored because they are large and contain full prompts.
+- `METHODS.md`: experimental setup and reproduction details.
+- `RESULTS.md`: consolidated findings and comparisons.
 
 No API key is committed. Live runs require `JEV_API_KEY` in the process
 environment.

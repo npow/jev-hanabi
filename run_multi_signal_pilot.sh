@@ -13,5 +13,5 @@ HANABI_SCORE_RISK_PENALTY=0 \
 HANABI_FORCE_SIGNAL_CLUES=1 \
 HANABI_MIN_SIGNAL_SLOTS=2 \
 HANABI_SEEDS='0,1,2,3,4,5,6,7,8,9' \
-HANABI_OUTDIR=results_hle_paper_sherlock_signal_score_multi_signal_pilot \
+HANABI_OUTDIR=results/runs/results_hle_paper_sherlock_signal_score_multi_signal_pilot \
 paper_env/.venv/bin/python benchmark_hle.py

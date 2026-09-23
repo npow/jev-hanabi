@@ -17,8 +17,8 @@ paper_env/.venv/
 # Raw API transcripts can contain prompts and are regenerated from manifests.
 results/**/games.jsonl
 results/**/jev_games.jsonl
-results_hle_*/games.jsonl
-results_hle_*/jev_games.jsonl
+results/runs/results_hle_*/games.jsonl
+results/runs/results_hle_*/jev_games.jsonl
 paper_env/outputs/
 
 # Local logs and editor files

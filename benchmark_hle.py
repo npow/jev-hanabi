@@ -27,7 +27,7 @@ from hanabi_utils import extract_knowledge  # noqa: E402
 API = "https://api.typesafe.ai/v1/systemone"
 MODEL = os.environ.get("HANABI_MODEL", "jev-latest")
 SEEDS = [int(x) for x in os.environ.get("HANABI_SEEDS", "0,1,2,3,4,5,6,7,8,9").split(",")]
-OUT = Path(os.environ.get("HANABI_OUTDIR", str(ROOT / "results_hle_watson")))
+OUT = Path(os.environ.get("HANABI_OUTDIR", str(ROOT / "results/runs/results_hle_watson")))
 MODE = os.environ.get("HANABI_MODE", "watson")
 PROMPT_VARIANT = os.environ.get("HANABI_PROMPT_VARIANT", "legacy")
 PLAYERS = 2
