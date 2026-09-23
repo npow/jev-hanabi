@@ -26,5 +26,6 @@ paper_env/outputs/
 .DS_Store
 .idea/
 .vscode/
+.cache/
 
 # Keep generated result metadata and small READMEs under version control.
