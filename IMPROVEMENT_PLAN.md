@@ -87,6 +87,11 @@ paired seeds (11 wins, 8 ties, 11 losses; all games finished with three lives).
 The +0.20 gain is below the +0.75 promotion gate, so it remains an exploratory
 arm rather than the default policy.
 
+The posterior-certain gate pilot scored 15.17/25 versus 14.80/25 on the same
+seeds (13 wins, 6 ties, 11 losses; all games finished with three lives). It
+produced one 20-point game, but the mean remains well below the target and is
+not promoted as the final policy.
+
 Promote only the best pilot to a 100-game confirmation. Report mean, bootstrap
 or t interval, score distribution, lives, plays/game, clues/game, discards/game,
 signal-clue fraction, and the fraction of turns where the frontier removed the
