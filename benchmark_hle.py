@@ -193,7 +193,9 @@ def action_frontier_indices(legal_moves, candidate_indices, safe_plays,
         clue_vectors[i] = vector
         frontier_values[i] = {"guaranteed_plays": slots,
                               "bits_reduction": vector[1],
-                              "matched_cards": vector[2]}
+                              "matched_cards": vector[2],
+                              "rollout_slot": min((clue_signal_slots or {}).get(i, [0]))
+                              if slots else None}
     frontier_clues = []
     for i, vector in clue_vectors.items():
         dominated = any(
@@ -282,6 +284,10 @@ def describe_move(index: int, move: str, clue_signal_slots=None,
                 description += (f" Frontier features: {value['guaranteed_plays']} guaranteed next-turn "
                                 f"play(s), {value['bits_reduction']:.2f} bits of possibility reduction, "
                                 f"{value['matched_cards']} matched card(s).")
+                if value['guaranteed_plays']:
+                    description += (f" Two-action rollout: the recipient should play slot "
+                                    f"{value['rollout_slot']} next, yielding one immediate point "
+                                    "before the subsequent state update.")
             if (clue_values is not None
                     and os.environ.get("HANABI_NUMERIC_CLUE_VALUES", "0") == "1"
                     and index in clue_values):
