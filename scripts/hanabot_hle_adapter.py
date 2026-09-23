@@ -11,6 +11,7 @@ import asyncio
 import json
 import os
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +31,7 @@ from hanabi_sim.players.good_touch_player import GoodTouchPlayer  # noqa: E402
 from hanabi_sim.players.tempo_player import TempoPlayer  # noqa: E402
 from hanabi_sim.players.deduce_five_player import DeduceFivePlayer  # noqa: E402
 from hanabi_sim.players.play_clue_player import PlayCluePlayer  # noqa: E402
+from hanabi_sim.players.reactor_deduce_player import ReactorEndgamePlayer  # noqa: E402
 
 COLOR_TO_EXTERNAL = {
     "R": Color.RED, "Y": Color.YELLOW, "G": Color.GREEN,
@@ -159,6 +161,47 @@ class EnsemblePlayer:
         return actions[0]
 
 
+class ConservativeEnsemblePlayer:
+    def __init__(self):
+        self.players = [DistantSavePlayer(), FocusPlayer(), DeduceFivePlayer()]
+
+    def act(self, obs):
+        actions = [player.act(obs) for player in self.players]
+        if all(action == actions[0] for action in actions[1:]):
+            return actions[0]
+        plays = [a for a in actions if a.type is ActionType.PLAY]
+        for action in plays:
+            if obs.known_playable(action.card_index):
+                return action
+        clues = [a for a in actions if a.is_clue]
+        if clues:
+            return clues[0]
+        return actions[0]
+
+
+class EndgameGamblePlayer:
+    def __init__(self):
+        self.base = DistantSavePlayer()
+
+    def act(self, obs):
+        action = self.base.act(obs)
+        if obs.deck_size > 2 or action.type is ActionType.PLAY:
+            return action
+        best = None
+        for i, view in enumerate(obs.own_hand):
+            total = len(view.possible_colors) * len(view.possible_ranks)
+            if not total:
+                continue
+            playable = sum(1 for color in view.possible_colors for rank in view.possible_ranks
+                           if rank == obs.play_stacks[color] + 1)
+            probability = playable / total
+            if best is None or probability > best[0]:
+                best = (probability, i)
+        if best is not None and best[0] >= 0.45:
+            return Action.play(best[1])
+        return action
+
+
 class SafeConventionPlayer:
     """Veto a play that is neither a direct certainty nor a convention call."""
     def __init__(self, base_cls=DistantSavePlayer):
@@ -175,6 +218,38 @@ class SafeConventionPlayer:
         if obs.clue_tokens < obs.max_clue_tokens:
             return self.base._choose_discard(obs)
         return self.base._stall_clue(obs)
+
+
+class HLEFilteredStallPlayer(DistantSavePlayer):
+    """Choose forced clues by simulating the receiver's convention parser."""
+    def _stall_clue(self, obs):
+        candidates = []
+        for p in obs.other_players():
+            hand = obs.hands[p]
+            for color in obs.colors:
+                touched = [cv for cv in hand if cv.card.color == color]
+                if touched:
+                    candidates.append((Action.clue_color(p, color), p, touched))
+            for rank in range(1, 6):
+                touched = [cv for cv in hand if cv.card.rank == rank]
+                if touched:
+                    candidates.append((Action.clue_rank(p, rank), p, touched))
+        safe = []
+        for action, target, touched in candidates:
+            record = ActionRecord(turn=obs.log[-1].turn + 1 if obs.log else 0,
+                                  player=obs.player_index, action=action,
+                                  touched_orders=tuple(cv.order for cv in touched))
+            simulated = replace(obs, log=obs.log + (record,))
+            called = self._derive_called(simulated, target)
+            if not called:
+                safe.append(action)
+                continue
+            actual = {cv.order: cv.card for cv in touched}
+            if all(obs.is_playable(actual[order]) for order in called if order in actual):
+                safe.append(action)
+        if safe:
+            return safe[0]
+        return super()._stall_clue(obs)
 
 
 
@@ -253,14 +328,18 @@ async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--games", type=int, default=100)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--strategy", choices=["chopsave", "critsave", "distsave", "focus", "goodtouch", "tempo", "deduce5", "playclue", "ensemble", "safe_distsave", "asym_df", "asym_fd"], default="distsave")
+    parser.add_argument("--strategy", choices=["chopsave", "critsave", "distsave", "focus", "goodtouch", "tempo", "deduce5", "playclue", "ensemble", "conservative_ensemble", "endgame_gamble", "safe_distsave", "filtered_stall", "reactor_endgame", "asym_df", "asym_fd"], default="distsave")
     args = parser.parse_args()
     strategy_cls = {"chopsave": ChopSavePlayer, "critsave": CriticalSavePlayer,
                     "distsave": DistantSavePlayer, "focus": FocusPlayer,
                     "goodtouch": GoodTouchPlayer, "tempo": TempoPlayer,
                     "deduce5": DeduceFivePlayer, "playclue": PlayCluePlayer,
-                    "ensemble": EnsemblePlayer, "asym_df": DistantSavePlayer,
-                    "asym_fd": FocusPlayer, "safe_distsave": SafeConventionPlayer}[args.strategy]
+                    "ensemble": EnsemblePlayer, "conservative_ensemble": ConservativeEnsemblePlayer,
+                    "endgame_gamble": EndgameGamblePlayer,
+                    "asym_df": DistantSavePlayer,
+                    "asym_fd": FocusPlayer, "safe_distsave": SafeConventionPlayer,
+                    "filtered_stall": HLEFilteredStallPlayer,
+                    "reactor_endgame": ReactorEndgamePlayer}[args.strategy]
     pair = None
     if args.strategy == "asym_df":
         pair = (DistantSavePlayer, FocusPlayer)
