@@ -41,6 +41,11 @@ A second open-source Python simulator, DarthCalculus/hanabot at commit
 | `distsave` | 1,000 | 20.63 |
 
 These strategies implement executable clue conventions for play focus, chop
-protection, critical saves, and distant saves. They are the next port target;
-the simulator and pinned HLE remain separate engines until action-by-action
-parity is verified.
+protection, critical saves, and distant saves. The reproducible HLE adapter in
+[`scripts/hanabot_hle_adapter.py`](scripts/hanabot_hle_adapter.py) uses the
+pinned upstream strategy code and scores **20.47/25 over 1,000 HLE games** with
+the `filtered_stall` variant:
+
+```bash
+HANABOT_STRATEGY=filtered_stall HANABOT_GAMES=1000 ./run_hanabot_hle_pilot.sh
+```

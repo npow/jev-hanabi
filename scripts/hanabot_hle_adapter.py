@@ -72,12 +72,15 @@ class Shadow:
             views = []
             for slot, card in enumerate(hand):
                 known, colors, ranks = parse_knowledge(knowledge[slot])
+                # HLE keeps the identity field at ``XX`` for partial clues;
+                # derive the upstream simulator's ``clued`` flag from whether
+                # either marginal candidate set was narrowed.
                 views.append(CardView(
                     order=self.orders[player][slot],
                     card=None if player == observer else card_to_external(card),
                     possible_colors=colors,
                     possible_ranks=ranks,
-                    clued=(known != "XX" if os.environ.get("HANABOT_CLUED_MODE", "known") == "known" else False),
+                    clued=(len(colors) < 5 or len(ranks) < 5),
                 ))
             hands.append(tuple(views))
         stacks = {COLOR_TO_EXTERNAL[c]: rank for c, rank in zip("RYGWB", game_state.fireworks())}

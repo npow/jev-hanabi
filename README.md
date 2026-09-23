@@ -20,6 +20,12 @@ It scored **14.37/25 over 200 games** (seeds 10–209), with all games retaining
 all three lives. See [`METHODS.md`](METHODS.md) for the setup and
 [`RESULTS.md`](RESULTS.md) for the complete comparison table.
 
+The strongest executable convention baseline, using the pinned open-source
+`hanabot` policy inside the same HLE engine, scores **20.47/25 over 1,000 games**.
+It is reproduced with `HANABOT_STRATEGY=filtered_stall HANABOT_GAMES=1000
+./run_hanabot_hle_pilot.sh` and is documented in
+[`EXTERNAL_BASELINES.md`](EXTERNAL_BASELINES.md).
+
 The primary estimate and sensitivity runs are summarized in
 [`RESULTS.md`](RESULTS.md). Run-level manifests are retained under
 [`results/runs/`](results/runs/) for reproducibility.
