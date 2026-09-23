@@ -26,6 +26,6 @@ tie-breaker over its candidate actions.
 
 The first local prototype in
 [`scripts/rule_policy_baseline.py`](scripts/rule_policy_baseline.py) scored
-14.08/25 over 100 fixed seeds with no life loss. It only implements guaranteed
-plays, immediate signal clues, information clues, and safest discards; it is
-not a SmartBot port and is retained as a failed heuristic baseline.
+15.06/25 over 100 fixed seeds with no life loss after adding exact posterior
+card-count filtering. It still lacks the full convention state machine and is
+retained as a failed local heuristic baseline.

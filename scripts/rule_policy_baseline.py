@@ -20,6 +20,32 @@ def choose(state, legal_moves):
     safe = sorted(set(safe) | {i for i, p in posterior.items() if p >= 1.0 - 1e-12})
     if safe:
         return min(safe)
+    # Critical-save convention: a rank clue on an unplayable rank protects a
+    # last surviving 2/3/4 on the partner's oldest unclued card.
+    partner = (game_state.cur_player() + 1) % bench.PLAYERS
+    partner_knowledge = bench.extract_knowledge(game_state, partner, bench.PLAYERS)
+    chop = next((i for i, entry in enumerate(partner_knowledge)
+                 if entry.split("||", 1)[1].split("|", 1)[0] == "XX"), None)
+    if chop is not None:
+        card = game_state.player_hands()[partner][chop]
+        rank = card.rank() + 1
+        color = "RYGWB"[card.color()]
+        copies = 3 if rank == 1 else (1 if rank == 5 else 2)
+        discarded = sum(1 for c in game_state.discard_pile()
+                        if c.color() == card.color() and c.rank() + 1 == rank)
+        rank_playable = any(top == rank - 1 for top in game_state.fireworks())
+        partner_has_safe = any(
+            slot < len(partner_knowledge) and all(
+                int(r) == game_state.fireworks()["RYGWB".index(c)] + 1
+                for c in "RYGWB" if c in entry.split("||", 1)[1].split("|", 1)[1]
+                for r in "12345" if r in entry.split("||", 1)[1].split("|", 1)[1]
+            )
+            for slot, entry in enumerate(partner_knowledge)
+        )
+        if rank in (2, 3, 4) and not rank_playable and discarded >= copies - 1 and not partner_has_safe:
+            for i, move in enumerate(legal_moves):
+                if move == f"(Reveal player +1 rank {rank})":
+                    return i
     play_threshold = float(os.environ.get("RULE_PLAY_THRESHOLD", "0"))
     if play_threshold:
         eligible = [i for i, p in posterior.items() if p >= play_threshold]
