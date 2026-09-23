@@ -380,6 +380,22 @@ def request_jev(prompt: str, legal_moves: list[str], key: str, candidate_indices
                 interface_note = ("The structured JEV Choice options below correspond exactly to the legal-action "
                                   "indices above. Select the action you judge best after applying the full instructions above.")
             state = observation + "\n\n" + interface_note
+            if os.environ.get("HANABI_SMART_CONVENTION_PROMPT", "0") == "1":
+                convention = (
+                    "Apply this cooperative Hanabi convention policy while evaluating every action. "
+                    "First take a play that is certain from your clue-compatible possibilities, including "
+                    "identities eliminated by public card counts. If no certain play exists, prefer a clue "
+                    "that makes exactly one teammate card playable and tells the teammate which slot to play. "
+                    "Protect unique critical cards and cards needed to complete a color; do not discard a card "
+                    "that may be the last copy of a needed identity. Prefer discarding a card known worthless, "
+                    "then the oldest card that is not critical. A clue that merely repeats known information is "
+                    "weak. Use a clue to warn a teammate before a valuable card would be discarded. If a clue "
+                    "creates a safe play, the recipient should take that play on the next turn. Near deck end, "
+                    "compare the remaining turn count with the number of unfinished playable cards and accept a "
+                    "high-probability play when a clue cannot create enough tempo. Score actions by expected final "
+                    "fireworks, not by immediate information alone."
+                )
+                state = convention + "\n\n" + state
         else:
             state = (strategy + "\n\n" + observation + "\n\n"
                      "Choose the single legal action that best maximizes your team's final fireworks score. "
