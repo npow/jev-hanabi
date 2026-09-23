@@ -37,12 +37,17 @@ state-aware convention-valid stall clues. Reproduce it with:
 This hybrid result keeps JEV in the action-selection loop while applying an
 explicit safety envelope to the candidate actions.
 
-The strict all-turn JEV selector scores **20.64/25 over 100 games** (seeds
-0–99), with JEV making the final action selection on every turn. Reproduce it
+The earlier candidate-filtered all-turn experiment scored 20.64/25, but it is
+not a valid plain-JEV result because the candidate generator supplied a safety
+prior. It is retained only as an explicitly labeled ablation.
+
+The plain-JEV runner presents every legal HLE action to JEV on every turn,
+with no convention candidate filtering or post-selection veto. Its initial
+10-game audits scored 3.9/25 with Choice and 4.1/25 with Score. Reproduce it
 with:
 
 ```sh
-./run_jev_all_turns.sh
+./run_jev_plain.sh
 ```
 
 The primary estimate and sensitivity runs are summarized in

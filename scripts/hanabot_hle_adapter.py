@@ -281,19 +281,34 @@ async def run(seed: int, strategy_cls=DistantSavePlayer, pair=None):
         final_score_mode="fireworks")
     state = await env.setup_state({"info": {"seed": seed}, "prompt": []})
     shadow = Shadow(state["hanabi_state"])
-    strategies = [strategy_cls(), strategy_cls()] if pair is None else [pair[0](), pair[1]()]
+    plain_jev = os.environ.get("HANABOT_JEV_PLAIN_ALL_TURNS", "0") == "1"
+    strategies = None if plain_jev else ([strategy_cls(), strategy_cls()] if pair is None else [pair[0](), pair[1]()])
     messages = state["prompt"]
     jev_key = os.environ.get("JEV_API_KEY")
+    jev_calls = 0
+    jev_multi = 0
+    jev_overrides = 0
     while True:
         game = state["hanabi_state"]
         if game.is_terminal() or state.get("done") or state.get("turn_count", 0) >= 100:
             break
         actor = game.cur_player()
         obs = shadow.observation(game, actor)
-        action = strategies[actor].act(obs)
-        move = to_hle_move(action, actor)
+        action = None if plain_jev else strategies[actor].act(obs)
+        move = None if plain_jev else to_hle_move(action, actor)
         legal = [str(m) for m in game.legal_moves()]
-        if (os.environ.get("HANABOT_JEV_ALL_TURNS", "0") == "1"
+        if (os.environ.get("HANABOT_JEV_PLAIN_ALL_TURNS", "0") == "1"
+                and jev_key):
+            baseline_index = 0
+            candidate_indices = list(range(len(legal)))
+            selected, _audit = hle.request_jev(
+                state["full_prompt_before_move"], legal, jev_key,
+                candidate_indices, None, None, None)
+            jev_calls += 1
+            jev_multi += len(candidate_indices) > 1
+            jev_overrides += int(selected != baseline_index)
+            move = legal[selected]
+        elif (os.environ.get("HANABOT_JEV_ALL_TURNS", "0") == "1"
                 and jev_key):
             safe_plays, unsafe_plays = hle.guaranteed_play_indices(game, 2, legal)
             candidate_indices = list(safe_plays)
@@ -312,6 +327,9 @@ async def run(seed: int, strategy_cls=DistantSavePlayer, pair=None):
                 state["full_prompt_before_move"], legal, jev_key,
                 candidate_indices, None, None, None,
                 recommended_index=baseline_index)
+            jev_calls += 1
+            jev_multi += len(candidate_indices) > 1
+            jev_overrides += int(selected != baseline_index)
             move = legal[selected]
         if (os.environ.get("HANABOT_JEV_STALLS", "0") == "1"
                 and jev_key and obs.clue_tokens == obs.max_clue_tokens
@@ -374,7 +392,8 @@ async def run(seed: int, strategy_cls=DistantSavePlayer, pair=None):
     if score is None:
         score = env._compute_score(state["hanabi_state"])
     return {"seed": seed, "score": int(score), "lives": state["hanabi_state"].life_tokens(),
-            "turns": state.get("turn_count", 0)}
+            "turns": state.get("turn_count", 0), "jev_calls": jev_calls,
+            "jev_multi": jev_multi, "jev_overrides": jev_overrides}
 
 
 async def main():
@@ -404,7 +423,10 @@ async def main():
                       "min": min(scores), "max": max(scores),
                       "all_lives": all(r["lives"] == 3 for r in rows),
                       "strikeouts": sum(r["lives"] == 0 for r in rows),
-                      "lives_mean": sum(r["lives"] for r in rows) / len(rows)}, indent=2))
+                      "lives_mean": sum(r["lives"] for r in rows) / len(rows),
+                      "jev_calls": sum(r["jev_calls"] for r in rows),
+                      "multi_candidate_calls": sum(r["jev_multi"] for r in rows),
+                      "jev_overrides": sum(r["jev_overrides"] for r in rows)}, indent=2))
 
 
 if __name__ == "__main__":
