@@ -49,3 +49,7 @@ the `filtered_stall` variant:
 ```bash
 HANABOT_STRATEGY=filtered_stall HANABOT_GAMES=1000 ./run_hanabot_hle_pilot.sh
 ```
+
+With JEV enabled as a structured Choice tie-breaker over the filtered stall
+actions, the hybrid reaches **20.502/25 over 1,000 games**. The exact command
+is [`run_jev_convention_hybrid.sh`](run_jev_convention_hybrid.sh).

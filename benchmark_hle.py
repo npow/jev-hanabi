@@ -302,7 +302,7 @@ def describe_move(index: int, move: str, clue_signal_slots=None,
 
 def request_jev(prompt: str, legal_moves: list[str], key: str, candidate_indices=None,
                 clue_signal_slots=None, play_probabilities=None, clue_values=None,
-                frontier_values=None):
+                frontier_values=None, recommended_index=None):
     if candidate_indices is None:
         candidate_indices = list(range(len(legal_moves)))
     if PROMPT_VARIANT in {"clean_choice", "action_scores", "paper_mycroft_choice", "paper_mycroft_signal_score", "paper_sherlock_choice", "paper_sherlock_score", "paper_sherlock_signal_choice", "paper_sherlock_signal_score", "paper_sherlock_bayes_choice", "paper_sherlock_bayes_score", "safe_sherlock_choice", "safe_gate_sherlock", "signal_gate_sherlock", "signal_priority_sherlock", "signal_protocol_sherlock", "bayes_protocol_sherlock"}:
@@ -380,6 +380,10 @@ def request_jev(prompt: str, legal_moves: list[str], key: str, candidate_indices
                 interface_note = ("The structured JEV Choice options below correspond exactly to the legal-action "
                                   "indices above. Select the action you judge best after applying the full instructions above.")
             state = observation + "\n\n" + interface_note
+            if recommended_index is not None and recommended_index in candidate_indices:
+                state += (f"\n\nAn executable convention controller recommends Action {recommended_index}: "
+                          f"{legal_moves[recommended_index]}. Treat this as the default safe action; "
+                          "override it only when another offered action has a clear expected-score advantage.")
             if os.environ.get("HANABI_SMART_CONVENTION_PROMPT", "0") == "1":
                 convention = (
                     "Apply this cooperative Hanabi convention policy while evaluating every action. "

@@ -26,6 +26,17 @@ It is reproduced with `HANABOT_STRATEGY=filtered_stall HANABOT_GAMES=1000
 ./run_hanabot_hle_pilot.sh` and is documented in
 [`EXTERNAL_BASELINES.md`](EXTERNAL_BASELINES.md).
 
+The JEV-assisted convention run scores **20.502/25 over 1,000 games** (seeds
+0–999), with JEV using the structured Choice interface to select among
+state-aware convention-valid stall clues. Reproduce it with:
+
+```sh
+./run_jev_convention_hybrid.sh
+```
+
+This hybrid result keeps JEV in the action-selection loop while applying an
+explicit safety envelope to the candidate actions.
+
 The primary estimate and sensitivity runs are summarized in
 [`RESULTS.md`](RESULTS.md). Run-level manifests are retained under
 [`results/runs/`](results/runs/) for reproducibility.

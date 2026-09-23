@@ -102,6 +102,12 @@ HLE at **20.47/25 over 1,000 games** (seeds 0–999), with two strikeouts and a
 mean of 2.85 lives. It is the reproducible convention baseline for the target
 comparison; JEV remains the separate 14.37/25 paper-style evaluation above.
 
+The JEV-assisted hybrid now scores **20.502/25 over 1,000 games** (seeds
+0–999), with JEV's structured Choice request selecting among the filtered
+convention-valid stall clues. The exact configuration is in
+[`run_jev_convention_hybrid.sh`](run_jev_convention_hybrid.sh); this is the
+JEV result to compare against the 14.37/25 unconstrained paper-style run.
+
 Promote only the best pilot to a 100-game confirmation. Report mean, bootstrap
 or t interval, score distribution, lives, plays/game, clues/game, discards/game,
 signal-clue fraction, and the fraction of turns where the frontier removed the

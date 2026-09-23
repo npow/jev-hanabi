@@ -225,7 +225,7 @@ class SafeConventionPlayer:
 
 class HLEFilteredStallPlayer(DistantSavePlayer):
     """Choose forced clues by simulating the receiver's convention parser."""
-    def _stall_clue(self, obs):
+    def safe_stall_actions(self, obs):
         candidates = []
         for p in obs.other_players():
             hand = obs.hands[p]
@@ -250,6 +250,10 @@ class HLEFilteredStallPlayer(DistantSavePlayer):
             actual = {cv.order: cv.card for cv in touched}
             if all(obs.is_playable(actual[order]) for order in called if order in actual):
                 safe.append(action)
+        return safe
+
+    def _stall_clue(self, obs):
+        safe = self.safe_stall_actions(obs)
         if safe:
             return safe[0]
         return super()._stall_clue(obs)
@@ -294,12 +298,38 @@ async def run(seed: int, strategy_cls=DistantSavePlayer, pair=None):
                 and action.is_clue):
             clue_indices = [i for i, candidate in enumerate(legal)
                             if candidate.startswith("(Reveal")]
+            if hasattr(strategies[actor], "safe_stall_actions"):
+                safe_actions = strategies[actor].safe_stall_actions(obs)
+                safe_moves = {to_hle_move(a, actor) for a in safe_actions}
+                filtered = [i for i in clue_indices if legal[i] in safe_moves]
+                if filtered:
+                    clue_indices = filtered
+                if os.environ.get("HANABOT_JEV_EQUIV_ONLY", "0") == "1" and len(filtered) > 1:
+                    # Let JEV break ties only within protocol-equivalent clues:
+                    # same target, clue kind, and touched card orders.
+                    groups = {}
+                    for i in filtered:
+                        candidate = legal[i]
+                        target = (actor + 1) % 2
+                        touched = tuple(shadow.orders[target][slot]
+                                        for slot, card in enumerate(game.player_hands()[target])
+                                        if (("color" in candidate and "RYGWB"[card.color()] == candidate[-2])
+                                            or ("rank" in candidate and card.rank() + 1 == int(candidate.split()[-1][:-1]))))
+                        kind = "color" if " color " in candidate else "rank"
+                        groups.setdefault((target, kind, touched), []).append(i)
+                    largest = max(groups.values(), key=len)
+                    if len(largest) > 1:
+                        clue_indices = largest
+                if len(clue_indices) > 1:
+                    baseline_move = to_hle_move(action, actor)
+                    clue_indices.sort(key=lambda i: legal[i] != baseline_move)
             if len(clue_indices) > 1:
                 signals = hle.guaranteed_plays_after_clues(game, 2, legal)
                 values = hle.clue_information_values(game, 2, legal)
                 selected, _audit = hle.request_jev(
                     state["full_prompt_before_move"], legal, jev_key,
-                    clue_indices, signals, None, values)
+                    clue_indices, signals, None, values,
+                    recommended_index=legal.index(move))
                 move = legal[selected]
         if move not in legal:
             raise RuntimeError(f"hanabot proposed illegal HLE move {move}; legal={legal}")
