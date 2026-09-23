@@ -97,6 +97,11 @@ The convention-prompt pilot scored 14.93/25 versus 14.80/25 (13 wins, 5 ties,
 not help; the next improvement must port executable convention state, not add
 more prose to JEV's prompt.
 
+The executable `distsave` convention adapter now runs inside the pinned HLE at
+19.719/25 over 1,000 games (19.84/25 on the first 100-game pilot). This is the
+current local ceiling and the baseline for closing the final gap before adding
+JEV tie-breaking.
+
 Promote only the best pilot to a 100-game confirmation. Report mean, bootstrap
 or t interval, score distribution, lives, plays/game, clues/game, discards/game,
 signal-clue fraction, and the fraction of turns where the frontier removed the
