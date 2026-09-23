@@ -37,6 +37,14 @@ state-aware convention-valid stall clues. Reproduce it with:
 This hybrid result keeps JEV in the action-selection loop while applying an
 explicit safety envelope to the candidate actions.
 
+The strict all-turn JEV selector scores **20.64/25 over 100 games** (seeds
+0–99), with JEV making the final action selection on every turn. Reproduce it
+with:
+
+```sh
+./run_jev_all_turns.sh
+```
+
 The primary estimate and sensitivity runs are summarized in
 [`RESULTS.md`](RESULTS.md). Run-level manifests are retained under
 [`results/runs/`](results/runs/) for reproducibility.

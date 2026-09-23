@@ -108,6 +108,11 @@ convention-valid stall clues. The exact configuration is in
 [`run_jev_convention_hybrid.sh`](run_jev_convention_hybrid.sh); this is the
 JEV result to compare against the 14.37/25 unconstrained paper-style run.
 
+In the strict all-turn configuration, JEV makes the final action selection on
+every turn from the safety-filtered candidate set and scores **20.64/25 over
+100 games** (seeds 0–99; one strikeout). The command is
+[`run_jev_all_turns.sh`](run_jev_all_turns.sh).
+
 Promote only the best pilot to a 100-game confirmation. Report mean, bootstrap
 or t interval, score distribution, lives, plays/game, clues/game, discards/game,
 signal-clue fraction, and the fraction of turns where the frontier removed the

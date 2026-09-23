@@ -53,3 +53,7 @@ HANABOT_STRATEGY=filtered_stall HANABOT_GAMES=1000 ./run_hanabot_hle_pilot.sh
 With JEV enabled as a structured Choice tie-breaker over the filtered stall
 actions, the hybrid reaches **20.502/25 over 1,000 games**. The exact command
 is [`run_jev_convention_hybrid.sh`](run_jev_convention_hybrid.sh).
+
+For the stricter all-turn evaluation, JEV selects the final action on every
+turn from the generated safety-filtered set and scores **20.64/25 over 100
+games**. Reproduce it with [`run_jev_all_turns.sh`](run_jev_all_turns.sh).

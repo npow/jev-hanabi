@@ -293,6 +293,26 @@ async def run(seed: int, strategy_cls=DistantSavePlayer, pair=None):
         action = strategies[actor].act(obs)
         move = to_hle_move(action, actor)
         legal = [str(m) for m in game.legal_moves()]
+        if (os.environ.get("HANABOT_JEV_ALL_TURNS", "0") == "1"
+                and jev_key):
+            safe_plays, unsafe_plays = hle.guaranteed_play_indices(game, 2, legal)
+            candidate_indices = list(safe_plays)
+            baseline_index = legal.index(move)
+            if not candidate_indices:
+                signals = hle.guaranteed_plays_after_clues(game, 2, legal)
+                signal_indices = [i for i, slots in signals.items() if slots]
+                candidate_indices = signal_indices
+                # Keep the executable convention's proposal as an explicit
+                # JEV alternative, including its safe discard/play fallback.
+                if baseline_index not in candidate_indices:
+                    candidate_indices.append(baseline_index)
+                if not candidate_indices:
+                    candidate_indices = [baseline_index]
+            selected, _audit = hle.request_jev(
+                state["full_prompt_before_move"], legal, jev_key,
+                candidate_indices, None, None, None,
+                recommended_index=baseline_index)
+            move = legal[selected]
         if (os.environ.get("HANABOT_JEV_STALLS", "0") == "1"
                 and jev_key and obs.clue_tokens == obs.max_clue_tokens
                 and action.is_clue):
