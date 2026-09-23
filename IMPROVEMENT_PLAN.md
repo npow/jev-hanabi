@@ -92,6 +92,11 @@ seeds (13 wins, 6 ties, 11 losses; all games finished with three lives). It
 produced one 20-point game, but the mean remains well below the target and is
 not promoted as the final policy.
 
+The convention-prompt pilot scored 14.93/25 versus 14.80/25 (13 wins, 5 ties,
+12 losses; all games finished with three lives). Verbal convention guidance did
+not help; the next improvement must port executable convention state, not add
+more prose to JEV's prompt.
+
 Promote only the best pilot to a 100-game confirmation. Report mean, bootstrap
 or t interval, score distribution, lives, plays/game, clues/game, discards/game,
 signal-clue fraction, and the fraction of turns where the frontier removed the
