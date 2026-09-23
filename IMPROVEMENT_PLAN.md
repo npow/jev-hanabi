@@ -82,6 +82,11 @@ finished with three lives). It did not meet the promotion gate, so it is not
 promoted. The next run should add two-action rollout annotations before
 retesting the frontier.
 
+The rollout-annotation pilot (C) scored 15.00/25 versus 14.80/25 on the same
+paired seeds (11 wins, 8 ties, 11 losses; all games finished with three lives).
+The +0.20 gain is below the +0.75 promotion gate, so it remains an exploratory
+arm rather than the default policy.
+
 Promote only the best pilot to a 100-game confirmation. Report mean, bootstrap
 or t interval, score distribution, lives, plays/game, clues/game, discards/game,
 signal-clue fraction, and the fraction of turns where the frontier removed the
