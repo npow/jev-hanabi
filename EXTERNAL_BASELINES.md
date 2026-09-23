@@ -29,3 +29,18 @@ The first local prototype in
 15.06/25 over 100 fixed seeds with no life loss after adding exact posterior
 card-count filtering. It still lacks the full convention state machine and is
 retained as a failed local heuristic baseline.
+
+A second open-source Python simulator, DarthCalculus/hanabot at commit
+`a7ef393adbe7ddbcd8c0f9b94c73d67e9256fb67`, reaches the target in its native
+2-player simulator:
+
+| Strategy | Games | Mean score |
+|---|---:|---:|
+| `chopsave` | 1,000 | 20.47 |
+| `critsave` | 1,000 | 20.64 |
+| `distsave` | 1,000 | 20.63 |
+
+These strategies implement executable clue conventions for play focus, chop
+protection, critical saves, and distant saves. They are the next port target;
+the simulator and pinned HLE remain separate engines until action-by-action
+parity is verified.
