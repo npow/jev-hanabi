@@ -76,6 +76,12 @@ and the seed recorded in every result row.
 | C | Frontier + rollout annotations | 30 games | Mean gain ≥0.75, no life loss |
 | D | Frontier + rollout + protocol | 30 games | Mean gain ≥1.0, no life loss |
 
+The action-frontier pilot (B) scored 14.60/25 on seeds 0–29 versus 14.80/25
+for the paired current-policy control (12 wins, 5 ties, 13 losses; all games
+finished with three lives). It did not meet the promotion gate, so it is not
+promoted. The next run should add two-action rollout annotations before
+retesting the frontier.
+
 Promote only the best pilot to a 100-game confirmation. Report mean, bootstrap
 or t interval, score distribution, lives, plays/game, clues/game, discards/game,
 signal-clue fraction, and the fraction of turns where the frontier removed the

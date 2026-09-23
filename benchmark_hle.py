@@ -35,6 +35,8 @@ BAYES_MIN_PLAY_PROBABILITY = float(os.environ.get("HANABI_BAYES_MIN_PLAY_PROBABI
 FORCE_PLAY_PROBABILITY = float(os.environ.get("HANABI_FORCE_PLAY_PROBABILITY", "0.75"))
 SCORE_RISK_PENALTY = float(os.environ.get("HANABI_SCORE_RISK_PENALTY", "0"))
 MIN_SIGNAL_SLOTS = int(os.environ.get("HANABI_MIN_SIGNAL_SLOTS", "1"))
+ACTION_FRONTIER = os.environ.get("HANABI_ACTION_FRONTIER", "0") == "1"
+FRONTIER_MAX_CLUES = int(os.environ.get("HANABI_FRONTIER_MAX_CLUES", "4"))
 ENGINE = "hanabi-learning-environment-mahesh==0.0.2"
 ENV_VERSION_ID = "nees3rw1f786tt0ojf1ef9m9"
 SOURCE_FILES = ["hanabi.py", "pyproject.toml", "src/hanabi_observations.py",
@@ -169,8 +171,56 @@ def clue_information_values(game_state, num_players: int, legal_moves: list[str]
     return values
 
 
+def action_frontier_indices(legal_moves, candidate_indices, safe_plays,
+                            clue_signal_slots, clue_values, play_probabilities):
+    """Keep a small Pareto frontier of useful clues plus the safest discard.
+
+    This is an opt-in action-space reduction. It does not invent actions or
+    override the guaranteed-play gate; it only removes dominated no-safe-play
+    alternatives before JEV scores them.
+    """
+    if safe_plays:
+        return list(safe_plays), {}
+    clue_indices = [i for i in candidate_indices if legal_moves[i].startswith("(Reveal")]
+    discard_indices = [i for i in candidate_indices if legal_moves[i].startswith("(Discard")]
+    frontier_values = {}
+    clue_vectors = {}
+    for i in clue_indices:
+        info = clue_values.get(i, {}) if clue_values else {}
+        slots = len((clue_signal_slots or {}).get(i, []))
+        vector = (slots, info.get("bits_reduction", 0.0),
+                  info.get("matched_cards", 0))
+        clue_vectors[i] = vector
+        frontier_values[i] = {"guaranteed_plays": slots,
+                              "bits_reduction": vector[1],
+                              "matched_cards": vector[2]}
+    frontier_clues = []
+    for i, vector in clue_vectors.items():
+        dominated = any(
+            all(other[j] >= vector[j] for j in range(3))
+            and any(other[j] > vector[j] for j in range(3))
+            for j, other in clue_vectors.items() if j != i)
+        if not dominated:
+            frontier_clues.append(i)
+    frontier_clues.sort(key=lambda i: clue_vectors[i], reverse=True)
+    frontier_clues = frontier_clues[:max(1, FRONTIER_MAX_CLUES)]
+
+    retained_discard = None
+    if discard_indices:
+        def discard_probability(index):
+            slot = int(legal_moves[index].removeprefix("(Discard ").removesuffix(")"))
+            play_index = next((j for j, move in enumerate(legal_moves)
+                               if move == f"(Play {slot})"), None)
+            return play_probabilities.get(play_index, 0.0) if play_index is not None else 0.0
+        retained_discard = min(discard_indices, key=discard_probability)
+        frontier_values[retained_discard] = {"play_probability": discard_probability(retained_discard)}
+    retained = frontier_clues + ([retained_discard] if retained_discard is not None else [])
+    return (retained if retained else list(candidate_indices)), frontier_values
+
+
 def describe_move(index: int, move: str, clue_signal_slots=None,
-                  play_probabilities=None, legal_moves=None, clue_values=None) -> str:
+                  play_probabilities=None, legal_moves=None, clue_values=None,
+                  frontier_values=None) -> str:
     if move.startswith("(Play "):
         slot = move.removeprefix("(Play ").removesuffix(")")
         description = f"Action {index}: Play the card in your hand slot {slot}."
@@ -197,6 +247,10 @@ def describe_move(index: int, move: str, clue_signal_slots=None,
                 description += (f" The discarded slot has {play_probabilities[play_index]:.0%} "
                                 "joint posterior chance of being playable now; treat that as "
                                 "the approximate immediate point value being discarded.")
+        if frontier_values is not None and index in frontier_values:
+            value = frontier_values[index]
+            description += (f" Frontier features: posterior play probability "
+                            f"{value['play_probability']:.0%}; this is the safest retained discard.")
         return description
     if move.startswith("(Reveal "):
         import re
@@ -223,6 +277,11 @@ def describe_move(index: int, move: str, clue_signal_slots=None,
                     description += " This clue would not make any recipient card guaranteed playable immediately."
                     if os.environ.get("HANABI_NUMERIC_ACTION_VALUES", "0") == "1":
                         description += " Approximate immediate score opportunity: 0 points."
+            if frontier_values is not None and index in frontier_values:
+                value = frontier_values[index]
+                description += (f" Frontier features: {value['guaranteed_plays']} guaranteed next-turn "
+                                f"play(s), {value['bits_reduction']:.2f} bits of possibility reduction, "
+                                f"{value['matched_cards']} matched card(s).")
             if (clue_values is not None
                     and os.environ.get("HANABI_NUMERIC_CLUE_VALUES", "0") == "1"
                     and index in clue_values):
@@ -235,7 +294,8 @@ def describe_move(index: int, move: str, clue_signal_slots=None,
 
 
 def request_jev(prompt: str, legal_moves: list[str], key: str, candidate_indices=None,
-                clue_signal_slots=None, play_probabilities=None, clue_values=None):
+                clue_signal_slots=None, play_probabilities=None, clue_values=None,
+                frontier_values=None):
     if candidate_indices is None:
         candidate_indices = list(range(len(legal_moves)))
     if PROMPT_VARIANT in {"clean_choice", "action_scores", "paper_mycroft_choice", "paper_mycroft_signal_score", "paper_sherlock_choice", "paper_sherlock_score", "paper_sherlock_signal_choice", "paper_sherlock_signal_score", "paper_sherlock_bayes_choice", "paper_sherlock_bayes_score", "safe_sherlock_choice", "safe_gate_sherlock", "signal_gate_sherlock", "signal_priority_sherlock", "signal_protocol_sherlock", "bayes_protocol_sherlock"}:
@@ -252,7 +312,8 @@ def request_jev(prompt: str, legal_moves: list[str], key: str, candidate_indices
                        for i in candidate_indices}
         else:
             choices = {f"move_{i}": describe_move(i, legal_moves[i], clue_signal_slots,
-                                                     play_probabilities, legal_moves, clue_values)
+                                                     play_probabilities, legal_moves, clue_values,
+                                                     frontier_values)
                        for i in candidate_indices}
         if MODE == "watson":
             strategy = WATSON_SYSTEM_PROMPT.split("\nExplain your reasoning clearly", 1)[0]
@@ -628,6 +689,7 @@ async def play(seed: int, key: str):
         candidate_indices = list(range(len(legal_moves)))
         clue_signal_slots = None
         clue_values = None
+        frontier_values = None
         play_probabilities = None
         posterior_certain_plays = []
         high_confidence_plays = []
@@ -720,11 +782,25 @@ async def play(seed: int, key: str):
                                       if len(slots) >= MIN_SIGNAL_SLOTS]
                     if signal_indices:
                         candidate_indices = signal_indices
+            if ACTION_FRONTIER and not safe_plays:
+                if clue_signal_slots is None:
+                    clue_signal_slots = guaranteed_plays_after_clues(game_state, PLAYERS, legal_moves)
+                if clue_values is None:
+                    clue_values = clue_information_values(game_state, PLAYERS, legal_moves)
+                if play_probabilities is None:
+                    play_probabilities = joint_play_probabilities(game_state, PLAYERS, legal_moves)
+                candidate_indices, frontier_values = action_frontier_indices(
+                    legal_moves, candidate_indices, safe_plays, clue_signal_slots,
+                    clue_values, play_probabilities)
         else:
             safe_plays, unsafe_plays = [], []
         move_idx, audit = request_jev(prompt, legal_moves, key, candidate_indices,
-                                      clue_signal_slots, play_probabilities, clue_values)
+                                      clue_signal_slots, play_probabilities, clue_values,
+                                      frontier_values)
         audit["eligible_move_indices"] = candidate_indices
+        if ACTION_FRONTIER:
+            audit["action_frontier_indices"] = candidate_indices
+            audit["action_frontier_values"] = frontier_values or {}
         if os.environ.get("HANABI_FILTER_RISKY_DISCARDS", "0") == "1":
             audit["filtered_risky_discard_indices"] = filtered_risky_discards
         if os.environ.get("HANABI_FILTER_REDUNDANT_CLUES", "0") == "1":
@@ -847,6 +923,8 @@ async def main_async():
             "min_clue_relative_reduction": float(os.environ.get("HANABI_MIN_CLUE_RELATIVE_REDUCTION", "0.0")),
             "score_risk_penalty": SCORE_RISK_PENALTY,
             "min_signal_slots": MIN_SIGNAL_SLOTS,
+            "action_frontier": ACTION_FRONTIER,
+            "frontier_max_clues": FRONTIER_MAX_CLUES,
             "clue_opportunity_annotation": "one_action_cap_v2",
         },
         "action_interface": ("JEV Score API rates every legal move independently in one fan-out request; highest expected score is applied"
