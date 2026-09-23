@@ -1,0 +1,63 @@
+{
+  "benchmark": "JEV full Sherlock prompt + safety/signal protocol; 2-player self-play",
+  "model": "jev-latest",
+  "prompt_variant": "paper_sherlock_signal_choice",
+  "players": 2,
+  "games": 100,
+  "score_denominator": 100,
+  "seeds": [
+    10,
+    109
+  ],
+  "scores": {
+    "mean": 9.72,
+    "sd": 3.5106763571779847,
+    "median": 9.0,
+    "range": [
+      3,
+      20
+    ],
+    "ci95_t": [
+      9.023405629058939,
+      10.416594370941063
+    ],
+    "bootstrap95_ci_seed_20260921": [
+      9.04,
+      10.41
+    ]
+  },
+  "paired_control": {
+    "run": "signal_protocol_sherlock",
+    "mean": 8.96,
+    "paired_delta_mean": 0.76,
+    "paired_delta_ci95_t": [
+      -0.1372274873836936,
+      1.6572274873836936
+    ],
+    "wins_ties_losses": [
+      48,
+      13,
+      39
+    ]
+  },
+  "action_counts": {
+    "clue": 3510,
+    "play": 972,
+    "discard": 3141
+  },
+  "lives": {
+    "all_three_lives_remaining": 100
+  },
+  "references": {
+    "GPT-4.1 mini Sherlock 2p": 6.5,
+    "GPT-4.1 Sherlock 2p": 14.8,
+    "DeepSeek-R1 Sherlock 2p": 17.5,
+    "o4-mini Sherlock 2p": 14.6,
+    "o3 Sherlock 2p": 17.6
+  },
+  "limitations": [
+    "The protocol programmatically removes unsafe plays and annotates signaling clues.",
+    "JEV uses structured Choice; paper baselines use free-form completions.",
+    "The paired improvement interval includes zero."
+  ]
+}

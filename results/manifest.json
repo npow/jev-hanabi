@@ -1,0 +1,28 @@
+{
+  "model_requested": "jev-latest",
+  "benchmark": "2-player standard Hanabi, JEV controls both players",
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "games": 3,
+  "api_calls": 66,
+  "decision_count": 66,
+  "input_sha256": "d3083a847f8f7124f7ab8629213a6f00e42c23f0594806d0631153f275645b18",
+  "deck_sha256_by_seed": {
+    "101": "b83d1a6232755107ec43da5dfc2d60f160a8e039aa16bf00ebda167c097b4e85",
+    "202": "017a9b9b33271940f59801bb1ce2957ff905e5221b5f5834ec40eb7395e354de",
+    "303": "1010fbba2cfaf8cd01f2dd33f5548fa8ce29ab09b2ed1da7f3d8694959c7dc45"
+  },
+  "results_sha256": "55a0991cf263d5bebff1585f6b618de88e160893136f41445fd1640b31aaad29",
+  "baseline_games": 3,
+  "baseline_scores": [
+    0,
+    0,
+    1
+  ],
+  "results_file": "jev_games.jsonl",
+  "summary_file": "summary.json",
+  "completed_at_utc": "2026-09-21T04:58:01.528735+00:00"
+}

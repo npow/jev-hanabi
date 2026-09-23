@@ -1,0 +1,72 @@
+{
+  "source_file": "games.jsonl",
+  "source_bytes": 18194148,
+  "source_lines": 10,
+  "whole_file_sha256": "2286debbeac193d9cd7e215e5ea76c9245b0e5ed7d82289ccd9ef3404719b5e0",
+  "whole_file_hash_note": null,
+  "line_hash_definition": "SHA-256 of each exact raw JSONL line, including its line terminator.",
+  "root_definition": "SHA-256 of UTF-8 lowercase line digests joined by LF, without trailing LF.",
+  "line_hash_root": "33cdc81415766bcf668af2e9f16c44ec7e65ef37f8e9bf04499d99b2bfe3543e",
+  "line_hashes": [
+    {
+      "line": 1,
+      "seed": 0,
+      "bytes": 1632896,
+      "sha256": "ac91b0d00ca4bcbd572a2e120e90c234351c915eefc65851208807ae72eff197"
+    },
+    {
+      "line": 2,
+      "seed": 1,
+      "bytes": 1819182,
+      "sha256": "5f062f300e994cfa91e8f0ec6b26f981640801befcad2f8e722f06365255da60"
+    },
+    {
+      "line": 3,
+      "seed": 2,
+      "bytes": 1742662,
+      "sha256": "75b3ade0e3ca78c5886a01adb6b28be9de9684b3d4c2225c844ac179112b8fb3"
+    },
+    {
+      "line": 4,
+      "seed": 3,
+      "bytes": 1631104,
+      "sha256": "7faba3ff10d67575ecbf2c48a822194beaf05cfbf1fcc8f6a775f083ca8f84ca"
+    },
+    {
+      "line": 5,
+      "seed": 4,
+      "bytes": 1999467,
+      "sha256": "a80b3115c0ab02df314cf343a733f6348bad3361cb5af5f73ab67c3ca7952934"
+    },
+    {
+      "line": 6,
+      "seed": 5,
+      "bytes": 1847970,
+      "sha256": "a532cced73bd8cfbc168fb0b6db99fa6980e4292f778b2816463b0c8583429c3"
+    },
+    {
+      "line": 7,
+      "seed": 6,
+      "bytes": 1791001,
+      "sha256": "f559213945fce9988c26c211d49706e2f0933eeeb6fa0cc74a237daf7340a168"
+    },
+    {
+      "line": 8,
+      "seed": 7,
+      "bytes": 1784050,
+      "sha256": "60bc6ace1580dd76ae7881093a74efe309e6b0cc215a3230ba3be8750fb2827c"
+    },
+    {
+      "line": 9,
+      "seed": 8,
+      "bytes": 1842021,
+      "sha256": "db935b249878563a1df9177ba51ecd4d2f12fe635840adbe9ae17f3c29c137f1"
+    },
+    {
+      "line": 10,
+      "seed": 9,
+      "bytes": 2103795,
+      "sha256": "b30bafa4b74eb652579e19b16ca889a9d3cb5ecf820fce2e40e772c57b7b5498"
+    }
+  ]
+}

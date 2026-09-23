@@ -1,0 +1,59 @@
+{
+  "benchmark": "Sparks of Cooperative Reasoning public environment; Mycroft; 2-player self-play",
+  "model": "jev-latest",
+  "evaluated_at_utc": "2026-09-22T05:33:11.913718+00:00",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "environment_id": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "mode": "mycroft",
+  "players": 2,
+  "prompt_variant": "paper_mycroft_choice",
+  "action_interface": "JEV Choice API selects among the paper environment's legal moves",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games_completed": 10,
+  "score_denominator": 10,
+  "scores": [
+    4,
+    3,
+    7,
+    7,
+    4,
+    5,
+    3,
+    3,
+    3,
+    2
+  ],
+  "score_mean": 4.1,
+  "score_median": 3.5,
+  "score_range": [
+    2,
+    7
+  ],
+  "total_api_calls": 406,
+  "decision_count": 406,
+  "action_counts": {
+    "clue": 206,
+    "play": 69,
+    "discard": 131
+  },
+  "published_2p_reference_scores": {
+    "GPT-4.1 mini": 10.8,
+    "GPT-4.1": 12.1,
+    "DeepSeek-R1": 14.2,
+    "o4-mini": 15.0,
+    "o3": 15.9
+  },
+  "comparison_note": "Paper references use 10 seeds and free-form completions; this run uses JEV's structured Choice interface."
+}

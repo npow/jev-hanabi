@@ -1,0 +1,36 @@
+{
+  "benchmark": "2-player standard Hanabi, JEV controls both players",
+  "model": "jev-latest",
+  "evaluated_at_utc": "2026-09-21T04:58:01.528735+00:00",
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "seed_count": 3,
+  "games_completed": 3,
+  "scores": [
+    1,
+    0,
+    4
+  ],
+  "score_mean": 1.6666666666666667,
+  "score_median": 1,
+  "score_range": [
+    0,
+    4
+  ],
+  "total_api_calls": 66,
+  "baseline_name": "random legal action, same shuffled deck seeds",
+  "baseline_scores": [
+    0,
+    0,
+    1
+  ],
+  "baseline_games": 3,
+  "baseline_mean": 0.3333333333333333,
+  "score_max": 25,
+  "decision_count": 66,
+  "input_sha256": "d3083a847f8f7124f7ab8629213a6f00e42c23f0594806d0631153f275645b18",
+  "score_claim_limit": "Small pilot; 3 fixed seeds are descriptive, not a reliable estimate of general Hanabi strength."
+}

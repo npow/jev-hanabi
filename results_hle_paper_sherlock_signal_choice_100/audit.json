@@ -1,0 +1,42 @@
+{
+  "games": 100,
+  "seeds": [
+    10,
+    109
+  ],
+  "mean": 9.72,
+  "sd": 3.5106763571779847,
+  "mean_ci95_t": [
+    9.023405629058939,
+    10.416594370941063
+  ],
+  "median": 9.0,
+  "range": [
+    3,
+    20
+  ],
+  "all_three_lives": 100,
+  "decisions": 7623,
+  "action_counts": {
+    "clue": 3510,
+    "play": 972,
+    "discard": 3141
+  },
+  "unsafe_selected": 0,
+  "unoffered_selected": 0,
+  "failed_play_turns": 0,
+  "results_sha256": "cce303536a4c16b41a714272956d8deb836ffa1c3b570478cc7ab2d1a64a001a",
+  "paired_vs_prior_signal_protocol": {
+    "mean_delta": 0.76,
+    "ci95_t": [
+      -0.1372274873836936,
+      1.6572274873836936
+    ],
+    "wins_ties_losses": [
+      48,
+      13,
+      39
+    ]
+  },
+  "engine_move_mismatches": 0
+}

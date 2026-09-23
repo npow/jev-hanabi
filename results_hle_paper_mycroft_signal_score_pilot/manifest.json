@@ -1,0 +1,43 @@
+{
+  "model_requested": "jev-latest",
+  "environment": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "mode": "mycroft",
+  "players": 2,
+  "prompt_variant": "paper_mycroft_signal_score",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games": 10,
+  "api_calls": 803,
+  "decision_count": 803,
+  "input_sha256": "083945a2122f9741ac4d6a28d75e0f0f5cf080b2afbd9524fbd1a7dc3621c57b",
+  "environment_source_sha256": {
+    "hanabi.py": "0fe84c96e6f17a0e092847223b398a4061fb402a936766ee64b3e6ab4428de33",
+    "pyproject.toml": "b98505c1dfbacb7b56131c6c3f0757e93c87e088268693e5f305a9933762fad5",
+    "src/hanabi_observations.py": "77a36b65713c59bbfb408c95c2a0a0124344b3b6c5981385133c8d3f5226a671",
+    "src/hanabi_prompts.py": "4cb34d584f4e46be3b17c21065b5adf6e0e632c1071f7d51217aa6ba2c327594",
+    "src/hanabi_parsers.py": "bfcac04c3f510b6d4921c514998103a77eac8e99cebecc389dbe33ec947e648c",
+    "src/hanabi_utils.py": "6332f2567164a0d713044023228838aa51cf09836a76cac7d91afaebda5b4d42"
+  },
+  "benchmark_harness_sha256": "3f8efeb1dbca2adaf4098cc531c6e99f82aaf85399fd3644991f39b741428255",
+  "results_sha256": "027096128b1f0b8e8dfa1eebd9e6438820a6a9be21cde69cc777776a9afcd424",
+  "results_sha256_note": null,
+  "results_integrity_file": "results_integrity.json",
+  "results_integrity_sha256": "8bffb503fbc9a3906d88ae9ef8dceaf7a644e2781b21ba0e79b48019a9153807",
+  "results_line_hash_root": "68eb6f84b9d298a66209284ae46b433a1c994ae01ec13f3c81940d23d827e159",
+  "summary_sha256": "54088c6de479ce718b950ffaed42690a4763866a805f6a08f5b45f648dcc6265",
+  "summary_file": "summary.json",
+  "results_file": "games.jsonl",
+  "completed_at_utc": "2026-09-22T05:41:17.658502+00:00"
+}

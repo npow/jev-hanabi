@@ -1,0 +1,59 @@
+{
+  "benchmark": "Sparks of Cooperative Reasoning public environment; Mycroft; 2-player self-play",
+  "model": "jev-latest",
+  "evaluated_at_utc": "2026-09-22T05:41:17.658502+00:00",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "environment_id": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "mode": "mycroft",
+  "players": 2,
+  "prompt_variant": "paper_mycroft_signal_score",
+  "action_interface": "JEV Score API rates every legal move independently in one fan-out request; highest expected score is applied",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games_completed": 10,
+  "score_denominator": 10,
+  "scores": [
+    10,
+    12,
+    3,
+    8,
+    5,
+    8,
+    7,
+    5,
+    13,
+    5
+  ],
+  "score_mean": 7.6,
+  "score_median": 7.5,
+  "score_range": [
+    3,
+    13
+  ],
+  "total_api_calls": 803,
+  "decision_count": 803,
+  "action_counts": {
+    "clue": 395,
+    "play": 76,
+    "discard": 332
+  },
+  "published_2p_reference_scores": {
+    "GPT-4.1 mini": 10.8,
+    "GPT-4.1": 12.1,
+    "DeepSeek-R1": 14.2,
+    "o4-mini": 15.0,
+    "o3": 15.9
+  },
+  "comparison_note": "Paper references use 10 seeds and free-form completions; this run uses JEV's structured Score interface."
+}

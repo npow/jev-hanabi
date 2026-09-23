@@ -1,0 +1,50 @@
+{
+  "model_requested": "jev-latest",
+  "environment": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "mode": "sherlock",
+  "players": 2,
+  "prompt_variant": "paper_sherlock_signal_score",
+  "policy_config": {
+    "filter_risky_discards": true,
+    "discard_min_play_probability": 0.1,
+    "force_posterior_plays": false,
+    "force_play_probability": 0.75,
+    "force_signal_clues": false
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games": 10,
+  "api_calls": 769,
+  "decision_count": 769,
+  "input_sha256": "94217138a76b3150685f75fedb546afe529404de694c30ff0fec750fcd526b0b",
+  "environment_source_sha256": {
+    "hanabi.py": "0fe84c96e6f17a0e092847223b398a4061fb402a936766ee64b3e6ab4428de33",
+    "pyproject.toml": "b98505c1dfbacb7b56131c6c3f0757e93c87e088268693e5f305a9933762fad5",
+    "src/hanabi_observations.py": "77a36b65713c59bbfb408c95c2a0a0124344b3b6c5981385133c8d3f5226a671",
+    "src/hanabi_prompts.py": "4cb34d584f4e46be3b17c21065b5adf6e0e632c1071f7d51217aa6ba2c327594",
+    "src/hanabi_parsers.py": "bfcac04c3f510b6d4921c514998103a77eac8e99cebecc389dbe33ec947e648c",
+    "src/hanabi_utils.py": "6332f2567164a0d713044023228838aa51cf09836a76cac7d91afaebda5b4d42"
+  },
+  "benchmark_harness_sha256": "955127d62cfad69d72e40cb156020730057bd3327dc908cf711dac7c6626de78",
+  "results_sha256": "a0577b76e9694b44b2b8363f4752287cd870868f7edc1c5eb47a63a34d4d6bb8",
+  "results_sha256_note": null,
+  "results_integrity_file": "results_integrity.json",
+  "results_integrity_sha256": "57f524685961366246d17960048d433855336846a7a51496f38f2d4ed9aa87e4",
+  "results_line_hash_root": "7ffe0860106bf9e2c2be995f6e2257d21d2d0b20b14dc156c55c6f18ce79b2f2",
+  "summary_sha256": "7f3003f38b20c67bace43705e33dc445f039945ba7c80f717c36fa093022789a",
+  "summary_file": "summary.json",
+  "results_file": "games.jsonl",
+  "completed_at_utc": "2026-09-22T09:20:44.697673+00:00"
+}

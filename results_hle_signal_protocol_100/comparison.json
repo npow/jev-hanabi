@@ -1,0 +1,118 @@
+{
+  "benchmark": "Paired 2-player Sherlock; JEV signal protocol versus JEV clean Choice control",
+  "model": "jev-1.13.0",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "prompt_variant": "signal_protocol_sherlock",
+  "control_variant": "clean_choice",
+  "players": 2,
+  "games": 100,
+  "score_denominator": 100,
+  "seeds": [
+    10,
+    109
+  ],
+  "signal_protocol": {
+    "mean": 8.96,
+    "median": 9.0,
+    "sd": 2.8388360112887643,
+    "range": [
+      1,
+      15
+    ],
+    "distribution": {
+      "1": 1,
+      "3": 2,
+      "4": 2,
+      "5": 3,
+      "6": 12,
+      "7": 14,
+      "8": 11,
+      "9": 11,
+      "10": 16,
+      "11": 5,
+      "12": 13,
+      "13": 4,
+      "14": 4,
+      "15": 2
+    },
+    "all_three_lives_remaining": 100,
+    "lives_lost_total": 0,
+    "actions": {
+      "clue": 3251,
+      "play": 896,
+      "discard": 3209
+    },
+    "successful_plays": 896,
+    "failed_plays": 0
+  },
+  "clean_choice_control": {
+    "mean": 3.83,
+    "median": 4.0,
+    "sd": 1.3857499883828361,
+    "range": [
+      1,
+      9
+    ],
+    "all_three_lives_remaining": 1
+  },
+  "paired_difference": {
+    "mean": 5.13,
+    "t95_ci": [
+      4.520765444359677,
+      5.739234555640323
+    ],
+    "bootstrap95_ci": [
+      4.54,
+      5.73
+    ],
+    "wins_ties_losses": [
+      94,
+      4,
+      2
+    ]
+  },
+  "decision_audit": {
+    "decisions": 7356,
+    "out_of_range": 0,
+    "choice_index_mismatch": 0,
+    "selected_action_not_offered": 0,
+    "engine_move_mismatch": 0,
+    "candidate_filter_mismatch": 0,
+    "unsafe_play_selected": 0,
+    "ignored_safe_play": 0,
+    "turns_with_guaranteed_play_offered": 896,
+    "violations": 0
+  },
+  "probability_diagnostics": {
+    "n": 7356,
+    "mean_chosen_probability": 0.4045146818923328,
+    "mean_choice_confidence": 0.3261963023382273,
+    "mean_top_two_probability_margin": 0.1791640018273184,
+    "resolved_models": {
+      "jev-1.13.0": 7356
+    },
+    "probability_calibration_note": "These are JEV Choice probabilities over offered actions; no gold optimal-action labels are available, so these numbers do not establish calibration."
+  },
+  "references": {
+    "GPT-4.1 mini Sherlock 2p": 6.5,
+    "GPT-4.1 Sherlock 2p": 14.8,
+    "DeepSeek-R1 Sherlock 2p": 17.5,
+    "o4-mini Sherlock 2p": 14.6,
+    "o3 Sherlock 2p": 17.6
+  },
+  "limitations": [
+    "JEV uses a structured Choice interface; the published paper baselines use free-form completions with a Bayesian step-by-step prompt.",
+    "The signal protocol constrains JEV to guaranteed-safe plays when any are available and annotates clues that create guaranteed plays; this is a scaffolded JEV result, not an unscaffolded model score.",
+    "Paper reference values are averages over 10 fixed seeds; this run has 100 paired seeds against the prior JEV clean Choice control."
+  ],
+  "artifacts": {
+    "results_file": "games.jsonl",
+    "results_sha256": "e3b0ce245d86fd5c882f40efd5974acba9a0318263504cb428357990430b5188",
+    "summary_file": "summary.json",
+    "summary_sha256": "e92d74a5722a106c04659390a2e2cf2d49f0cec35e4f82e1217e729139f04163",
+    "integrity_audit_file": "integrity_audit.json",
+    "results_line_hash_root": "45ba9ee43a5e055ba32e007f210f5eab29ad91bdec9b7348d60719cffc19794f",
+    "results_sha256_validation": "Matches manifest; per-line audit is supplementary."
+  }
+}

@@ -1,0 +1,30 @@
+# Credentials and local environment state
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+**/.prime/
+
+# Python and local environments
+__pycache__/
+*.py[cod]
+.venv/
+paper_env/.venv/
+.mypy_cache/
+.pytest_cache/
+
+# Raw API transcripts can contain prompts and are regenerated from manifests.
+results/**/games.jsonl
+results/**/jev_games.jsonl
+results_hle_*/games.jsonl
+results_hle_*/jev_games.jsonl
+paper_env/outputs/
+
+# Local logs and editor files
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# Keep generated result metadata and small READMEs under version control.

@@ -1,0 +1,72 @@
+{
+  "source_file": "games.jsonl",
+  "source_bytes": 5745003,
+  "source_lines": 10,
+  "whole_file_sha256": "29cbd1a40923e0c2102cff2e2873555cf0894d3bc6ac6671354c243458f0cd01",
+  "whole_file_hash_note": null,
+  "line_hash_definition": "SHA-256 of each exact raw JSONL line, including its line terminator.",
+  "root_definition": "SHA-256 of UTF-8 lowercase line digests joined by LF, without trailing LF.",
+  "line_hash_root": "e8dfca53922a3aa9a226a9e17ba456884f3ea60a71cc81d4d7b66ae036b7236f",
+  "line_hashes": [
+    {
+      "line": 1,
+      "seed": 0,
+      "bytes": 676737,
+      "sha256": "646f9fa5c11bdd211810b173abd0183300aa264970c11b2f828c04097f45cf91"
+    },
+    {
+      "line": 2,
+      "seed": 1,
+      "bytes": 825422,
+      "sha256": "ce3ab89e999b29fcc97b060c3deadb4e7cd28f89cd29e9d9bc7a68870dad36bd"
+    },
+    {
+      "line": 3,
+      "seed": 2,
+      "bytes": 848509,
+      "sha256": "c04c475185f548df8ce44530842d01136a5cce4ec114a98e601902f00b95bbd2"
+    },
+    {
+      "line": 4,
+      "seed": 3,
+      "bytes": 323632,
+      "sha256": "69a0293bb24c648b836182aaf975d0f332500b796085ed3f4022b3d4d9263b35"
+    },
+    {
+      "line": 5,
+      "seed": 4,
+      "bytes": 328901,
+      "sha256": "9996bd21ede7964da76b625ed136786395490a9f54ce8c1b8b1854621614b181"
+    },
+    {
+      "line": 6,
+      "seed": 5,
+      "bytes": 645319,
+      "sha256": "d98d4e5ff5e2e235906397461593c35770701c61b72a6c31001261197a8e1d50"
+    },
+    {
+      "line": 7,
+      "seed": 6,
+      "bytes": 368994,
+      "sha256": "69632c5bb15cd457bb96423992fcdfa80843ef4287bc258c666c54900e0c02f1"
+    },
+    {
+      "line": 8,
+      "seed": 7,
+      "bytes": 505239,
+      "sha256": "1202b1f959f381cd6d2d96dbc05c5bea526bc59fe3e4ae1c486d921ba46c4181"
+    },
+    {
+      "line": 9,
+      "seed": 8,
+      "bytes": 946095,
+      "sha256": "7e6e86d2b6badeaba5bc523f9390da4fb9072d807685156fd12c406c691f7e3b"
+    },
+    {
+      "line": 10,
+      "seed": 9,
+      "bytes": 276155,
+      "sha256": "8fa49a62c8700b5d0c0af189013734786346c7886a5a0b2003f62341dcf12d4b"
+    }
+  ]
+}

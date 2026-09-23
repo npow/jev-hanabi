@@ -1,0 +1,59 @@
+{
+  "benchmark": "Sparks of Cooperative Reasoning public environment; Watson; 2-player self-play",
+  "model": "jev-1.13.0",
+  "evaluated_at_utc": "2026-09-21T06:20:54.055816+00:00",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "environment_id": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "mode": "watson",
+  "players": 2,
+  "prompt_variant": "clean_choice",
+  "action_interface": "JEV Choice API; candidates are the paper environment's indexed legal moves",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games_completed": 10,
+  "score_denominator": 10,
+  "scores": [
+    1,
+    3,
+    3,
+    0,
+    1,
+    2,
+    3,
+    0,
+    1,
+    0
+  ],
+  "score_mean": 1.4,
+  "score_median": 1.0,
+  "score_range": [
+    0,
+    3
+  ],
+  "total_api_calls": 562,
+  "decision_count": 562,
+  "action_counts": {
+    "clue": 301,
+    "play": 36,
+    "discard": 225
+  },
+  "published_watson_2p_reference_scores": {
+    "GPT-4.1 mini": 10.8,
+    "GPT-4.1": 12.1,
+    "DeepSeek-R1": 14.2,
+    "o4-mini": 15.0,
+    "o3": 15.9
+  },
+  "comparison_note": "Published Watson results use 10 games per player count; compare the 2-player Watson score only."
+}

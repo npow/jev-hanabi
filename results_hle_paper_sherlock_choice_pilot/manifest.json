@@ -1,0 +1,43 @@
+{
+  "model_requested": "jev-latest",
+  "environment": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "mode": "sherlock",
+  "players": 2,
+  "prompt_variant": "paper_sherlock_choice",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games": 10,
+  "api_calls": 251,
+  "decision_count": 251,
+  "input_sha256": "6329dda3e82cb46c87be0096e950d9cd52967c2847aa2428e60f4fc6af83378a",
+  "environment_source_sha256": {
+    "hanabi.py": "0fe84c96e6f17a0e092847223b398a4061fb402a936766ee64b3e6ab4428de33",
+    "pyproject.toml": "b98505c1dfbacb7b56131c6c3f0757e93c87e088268693e5f305a9933762fad5",
+    "src/hanabi_observations.py": "77a36b65713c59bbfb408c95c2a0a0124344b3b6c5981385133c8d3f5226a671",
+    "src/hanabi_prompts.py": "4cb34d584f4e46be3b17c21065b5adf6e0e632c1071f7d51217aa6ba2c327594",
+    "src/hanabi_parsers.py": "bfcac04c3f510b6d4921c514998103a77eac8e99cebecc389dbe33ec947e648c",
+    "src/hanabi_utils.py": "6332f2567164a0d713044023228838aa51cf09836a76cac7d91afaebda5b4d42"
+  },
+  "benchmark_harness_sha256": "825e0b5ed73a9457d3a5c2f58a2ec89b16a70aeefdac9fd18747002531cf1cba",
+  "results_sha256": "29cbd1a40923e0c2102cff2e2873555cf0894d3bc6ac6671354c243458f0cd01",
+  "results_sha256_note": null,
+  "results_integrity_file": "results_integrity.json",
+  "results_integrity_sha256": "38bd50a149651944871a4bd97e60349994f1edcf239df67065774d4b5e1c029e",
+  "results_line_hash_root": "e8dfca53922a3aa9a226a9e17ba456884f3ea60a71cc81d4d7b66ae036b7236f",
+  "summary_sha256": "b5cf0cd593806d49a78028bb31163084c3c2821401c1ffa9f58cd81a59b954ea",
+  "summary_file": "summary.json",
+  "results_file": "games.jsonl",
+  "completed_at_utc": "2026-09-21T22:00:33.174430+00:00"
+}

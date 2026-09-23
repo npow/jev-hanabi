@@ -1,0 +1,78 @@
+{
+  "benchmark": "Sparks of Cooperative Reasoning public environment; Sherlock; 2-player self-play",
+  "model": "jev-latest",
+  "evaluated_at_utc": "2026-09-22T20:48:54.013543+00:00",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "environment_id": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "mode": "sherlock",
+  "players": 2,
+  "prompt_variant": "paper_sherlock_signal_score",
+  "policy_config": {
+    "filter_risky_discards": true,
+    "discard_min_play_probability": 0.1,
+    "force_posterior_plays": false,
+    "force_play_probability": 0.75,
+    "force_signal_clues": true,
+    "show_posterior_probs": false,
+    "numeric_action_values": true,
+    "numeric_discard_values": true,
+    "numeric_clue_values": true,
+    "filter_redundant_clues": true,
+    "min_clue_relative_reduction": 0.0,
+    "score_risk_penalty": 0.0,
+    "min_signal_slots": 2,
+    "clue_opportunity_annotation": "one_action_cap_v2"
+  },
+  "action_interface": "JEV Score API rates every legal move independently in one fan-out request; highest expected score is applied",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games_completed": 10,
+  "score_denominator": 10,
+  "scores": [
+    14,
+    13,
+    10,
+    14,
+    16,
+    15,
+    14,
+    13,
+    19,
+    10
+  ],
+  "score_mean": 13.8,
+  "score_median": 14.0,
+  "score_range": [
+    10,
+    19
+  ],
+  "requested_games": 10,
+  "run_status": "complete",
+  "run_error": null,
+  "total_api_calls": 751,
+  "decision_count": 751,
+  "action_counts": {
+    "clue": 341,
+    "play": 138,
+    "discard": 272
+  },
+  "published_2p_reference_scores": {
+    "GPT-4.1 mini": 6.5,
+    "GPT-4.1": 14.8,
+    "DeepSeek-R1": 17.5,
+    "o4-mini": 14.6,
+    "o3": 17.6
+  },
+  "comparison_note": "Paper references use 10 seeds and free-form completions; this run uses JEV's structured Score interface."
+}

@@ -1,0 +1,59 @@
+{
+  "benchmark": "Sparks of Cooperative Reasoning public environment; Sherlock; 2-player self-play",
+  "model": "jev-1.13.0",
+  "evaluated_at_utc": "2026-09-21T18:03:29.650241+00:00",
+  "engine": "hanabi-learning-environment-mahesh==0.0.2",
+  "environment_id": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "mode": "sherlock",
+  "players": 2,
+  "prompt_variant": "signal_gate_sherlock",
+  "action_interface": "JEV Choice API selects among the paper environment's legal moves",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games_completed": 10,
+  "score_denominator": 10,
+  "scores": [
+    12,
+    9,
+    11,
+    13,
+    7,
+    10,
+    7,
+    7,
+    15,
+    10
+  ],
+  "score_mean": 10.1,
+  "score_median": 10.0,
+  "score_range": [
+    7,
+    15
+  ],
+  "total_api_calls": 728,
+  "decision_count": 728,
+  "action_counts": {
+    "clue": 317,
+    "discard": 310,
+    "play": 101
+  },
+  "published_2p_reference_scores": {
+    "GPT-4.1 mini": 6.5,
+    "GPT-4.1": 14.8,
+    "DeepSeek-R1": 17.5,
+    "o4-mini": 14.6,
+    "o3": 17.6
+  },
+  "comparison_note": "Paper references use 10 seeds per player count and free-form completions; this run uses JEV Choice."
+}

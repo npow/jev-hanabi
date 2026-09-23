@@ -1,0 +1,124 @@
+{
+  "analysis": "Exact finite-card Bayesian posterior calibration on saved observations",
+  "source_run": "signal_protocol_sherlock, 2 players, seeds 10-109",
+  "source_games": 100,
+  "source_decisions": 7356,
+  "source_games_sha256": "e3b0ce245d86fd5c882f40efd5974acba9a0318263504cb428357990430b5188",
+  "method": {
+    "prior": "Uniform random order over the physical unseen card pool.",
+    "known_cards_removed": [
+      "visible teammate hand",
+      "discard pile",
+      "cards already played on fireworks"
+    ],
+    "constraints": "For each own hand slot, use the paper Sherlock engine-generated color/rank possibility set.",
+    "joint_assignment": "Enumerate all assignments to the acting player's hand, weight each assignment by the falling factorial of remaining physical copies, and compute each slot's playable marginal. This accounts for duplicate-card competition across own hidden slots.",
+    "truth_labels": "Use actual hidden card identities from the engine trajectory after each decision. For the selected play slot, use the observed successful play. Exclude a discarded slot whose card has already left hand.",
+    "limitations": "This calibration is descriptive on states visited by the safe signal protocol; slot-turn outcomes and games are correlated, and the next policy may visit different states."
+  },
+  "data_audit": {
+    "slot_labels": 33571,
+    "non_safe_slot_labels": 32542,
+    "retained_hidden_identities_checked": 32675,
+    "identity_outside_sherlock_possibility_set": 0,
+    "hand_index_mapping_errors": 0,
+    "posterior_zero_assignment_states": 0
+  },
+  "calibration": {
+    "brier_score_all_slots": 0.1016551663,
+    "brier_score_non_safe_slots": 0.1048695713,
+    "bins_all_slots": [
+      {
+        "range": "[0.0,0.1)",
+        "n": 13013,
+        "mean_probability": 0.008,
+        "observed_play_rate": 0.005
+      },
+      {
+        "range": "[0.1,0.2)",
+        "n": 3500,
+        "mean_probability": 0.149,
+        "observed_play_rate": 0.11
+      },
+      {
+        "range": "[0.2,0.3)",
+        "n": 7343,
+        "mean_probability": 0.251,
+        "observed_play_rate": 0.194
+      },
+      {
+        "range": "[0.3,0.4)",
+        "n": 5203,
+        "mean_probability": 0.334,
+        "observed_play_rate": 0.226
+      },
+      {
+        "range": "[0.4,0.5)",
+        "n": 1346,
+        "mean_probability": 0.42,
+        "observed_play_rate": 0.258
+      },
+      {
+        "range": "[0.5,0.6)",
+        "n": 1156,
+        "mean_probability": 0.511,
+        "observed_play_rate": 0.237
+      },
+      {
+        "range": "[0.6,0.7)",
+        "n": 495,
+        "mean_probability": 0.647,
+        "observed_play_rate": 0.281
+      },
+      {
+        "range": "[0.7,0.8)",
+        "n": 191,
+        "mean_probability": 0.739,
+        "observed_play_rate": 0.445
+      },
+      {
+        "range": "[0.8,0.9)",
+        "n": 212,
+        "mean_probability": 0.83,
+        "observed_play_rate": 0.642
+      },
+      {
+        "range": "[0.9,1.0]",
+        "n": 1112,
+        "mean_probability": 0.999,
+        "observed_play_rate": 0.996
+      }
+    ],
+    "non_safe_thresholds": {
+      "0.80": {
+        "candidate_slot_turns": 295,
+        "games_with_candidate": 77,
+        "mean_predicted": 0.874,
+        "observed_play_rate": 0.725,
+        "successful": 214,
+        "failed": 81
+      },
+      "0.90": {
+        "candidate_slot_turns": 83,
+        "games_with_candidate": 48,
+        "mean_predicted": 0.987,
+        "observed_play_rate": 0.94,
+        "successful": 78,
+        "failed": 5
+      },
+      "0.95": {
+        "candidate_slot_turns": 71,
+        "games_with_candidate": 45,
+        "mean_predicted": 1.0,
+        "observed_play_rate": 1.0,
+        "successful": 71,
+        "failed": 0
+      }
+    }
+  },
+  "interpretation": "Use 0.90 as an exploratory risk cutoff: 78/83 non-safe slot-turns at or above it were playable in these trajectories. The cutoff is not a proven optimal policy and must be evaluated on fresh games.",
+  "implementation_source_sha256": "23ba778f4283bcbe65de0cbdaba0480f16016727ed2b8996bf4cc05a196ece0c",
+  "source_line_hash_root": "45ba9ee43a5e055ba32e007f210f5eab29ad91bdec9b7348d60719cffc19794f",
+  "source_integrity_audit_file": "integrity_audit.json",
+  "source_hash_validation": "Source SHA-256 matches manifest; row hashes and root are additionally verified in integrity_audit.json."
+}

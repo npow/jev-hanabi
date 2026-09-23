@@ -1,0 +1,25 @@
+{
+  "status": "no_completed_games",
+  "model": "jev-1.13.0",
+  "environment": "mahesh-ramesh/hanabi",
+  "environment_version_id": "nees3rw1f786tt0ojf1ef9m9",
+  "mode": "sherlock",
+  "players": 2,
+  "prompt_variant": "bayes_gate_sherlock",
+  "requested_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "games_completed": 0,
+  "results_file": "games.jsonl",
+  "results_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stop_reason": "The first JEV request returned HTTP 402 Payment Required; no game completed."
+}
