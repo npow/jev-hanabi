@@ -37,6 +37,7 @@ SCORE_RISK_PENALTY = float(os.environ.get("HANABI_SCORE_RISK_PENALTY", "0"))
 MIN_SIGNAL_SLOTS = int(os.environ.get("HANABI_MIN_SIGNAL_SLOTS", "1"))
 ACTION_FRONTIER = os.environ.get("HANABI_ACTION_FRONTIER", "0") == "1"
 FRONTIER_MAX_CLUES = int(os.environ.get("HANABI_FRONTIER_MAX_CLUES", "4"))
+USE_POSTERIOR_CERTAIN_PLAYS = os.environ.get("HANABI_USE_POSTERIOR_CERTAIN_PLAYS", "0") == "1"
 ENGINE = "hanabi-learning-environment-mahesh==0.0.2"
 ENV_VERSION_ID = "nees3rw1f786tt0ojf1ef9m9"
 SOURCE_FILES = ["hanabi.py", "pyproject.toml", "src/hanabi_observations.py",
@@ -706,6 +707,12 @@ async def play(seed: int, key: str):
             if MODE != "sherlock" and PROMPT_VARIANT != "paper_mycroft_signal_score":
                 raise ValueError("safe_gate_sherlock requires HANABI_MODE=sherlock")
             safe_plays, unsafe_plays = guaranteed_play_indices(game_state, PLAYERS, legal_moves)
+            if USE_POSTERIOR_CERTAIN_PLAYS:
+                play_probabilities = joint_play_probabilities(game_state, PLAYERS, legal_moves)
+                posterior_certain = [i for i, p in play_probabilities.items()
+                                     if p >= 1.0 - 1e-12]
+                safe_plays = sorted(set(safe_plays) | set(posterior_certain))
+                unsafe_plays = [i for i in unsafe_plays if i not in safe_plays]
             candidate_indices = [i for i in candidate_indices if i not in unsafe_plays]
             if os.environ.get("HANABI_FILTER_RISKY_DISCARDS", "0") == "1":
                 pre_discard_filter_indices = list(candidate_indices)
@@ -931,6 +938,7 @@ async def main_async():
             "min_signal_slots": MIN_SIGNAL_SLOTS,
             "action_frontier": ACTION_FRONTIER,
             "frontier_max_clues": FRONTIER_MAX_CLUES,
+            "use_posterior_certain_plays": USE_POSTERIOR_CERTAIN_PLAYS,
             "clue_opportunity_annotation": "one_action_cap_v2",
         },
         "action_interface": ("JEV Score API rates every legal move independently in one fan-out request; highest expected score is applied"

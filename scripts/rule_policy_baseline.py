@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -15,8 +16,15 @@ import benchmark_hle as bench  # noqa: E402
 def choose(state, legal_moves):
     game_state = state["hanabi_state"]
     safe, _ = bench.guaranteed_play_indices(game_state, bench.PLAYERS, legal_moves)
+    posterior = bench.joint_play_probabilities(game_state, bench.PLAYERS, legal_moves)
+    safe = sorted(set(safe) | {i for i, p in posterior.items() if p >= 1.0 - 1e-12})
     if safe:
         return min(safe)
+    play_threshold = float(os.environ.get("RULE_PLAY_THRESHOLD", "0"))
+    if play_threshold:
+        eligible = [i for i, p in posterior.items() if p >= play_threshold]
+        if eligible:
+            return max(eligible, key=lambda i: posterior[i])
     signals = bench.guaranteed_plays_after_clues(game_state, bench.PLAYERS, legal_moves)
     signal_indices = [i for i, slots in signals.items() if slots]
     if signal_indices:
